@@ -11,10 +11,14 @@ initialize("./archives");
 var port = 8080;
 var ip = "127.0.0.1";
 var router = {
-  '/': handler.handleRequest
+  '/': handler.serveFile
 };
 var server = http.createServer(function (req, res) {
   var route = url.parse(req.url).pathname;
+  if(router[route]) {
+    router[route](req, res);
+  }
+
 
 });
 
