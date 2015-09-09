@@ -10,16 +10,17 @@ var mime = require('mime');
 exports.handleRequest = function (req, res) {
   res.end(archive.paths.list);
 };
+
 exports.serveFile = function (req, res) {
-  console.log("directory name: " + __dirname);
+  
   var route = url.parse(req.url);
-  console.log("route: " + route);
+  var filename = route.pathname === '/' ? '/index.html' : route.pathname;
 
   var mimeType = mime.lookup(route.pathname);
   //this probably changes the object in memory, maybe refactor
   var headers = helpers.headers['Content-Type'] = mimeType;
   res.writeHead(200, headers);
-  fs.readFile(__dirname + '/public' + route.pathname, function(err, data) {
+  fs.readFile(__dirname + '/public' + filename, function(err, data) {
     if(err) {
       console.log("Your shit broke, yo.");
     } else {
@@ -28,5 +29,4 @@ exports.serveFile = function (req, res) {
   });
 
 };
-
 
