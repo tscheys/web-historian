@@ -7,7 +7,6 @@ var url = require('url');
 var mime = require('mime');
 // require more modules/folders here!
 
-
 var buildData = function(req, callback) {
 
   var body = '';
@@ -16,15 +15,25 @@ var buildData = function(req, callback) {
     body += chunk;
   });
   req.on('end', function() {
-    callback(body);
+     callback(body);
   });
 };
 
 var handlePost = function (req, res) {
-  var url;
+  console.log('handlePOST');
   buildData(req, function(data) {
-    url = data;
+  
+  var url = data.split('=')[1];
+  
+  archive.isUrlInList(url, function() {
+    
   });
+  // archive.addUrlToList(url, function() {
+
+  // });
+
+  });
+
 };
 
 var actions = {
@@ -33,9 +42,8 @@ var actions = {
 
 exports.handleRequest = function (req, res) {
   console.log('handleRequest');
-  // var route = url.parse(req.url);
   var method = req.method;
-  console.log(method);
+
   if(actions[method]) {
 
     actions[method](req, res);
