@@ -24,8 +24,6 @@ var handlePost = function (req, res) {
   buildData(req, function(data) {
   
     var url = data.split('=')[1];
-    
-    archive.readListOfUrls(archive.isUrlInList, url, req, res);
 
     // res.writeHead(200, helpers.headers);
     // res.end('end of post response brahh');
@@ -33,8 +31,18 @@ var handlePost = function (req, res) {
   });
 };
 
+var handleGet = function(req, res) {
+  //do something
+  var url = url.parse(req.url).pathname;
+  //write head
+  res.writeHead(200, helpers.headers);
+  //end response
+  res.end(archive.paths.archivedSites + '/' + url);
+}
+
 var actions = {
-  'POST': handlePost
+  'POST': handlePost,
+  'GET': handleGet
 };
 
 exports.handleRequest = function (req, res) {
@@ -53,6 +61,8 @@ exports.handleRequest = function (req, res) {
     res.end('off limits braaah');
   }
 };
+
+
 
 
 

@@ -25,17 +25,20 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(cb) {
+
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(url, cb) {
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, cb) {
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, cb) {
+
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urls) {
+  //should use htmlfetcher.js to scrape the url for html content
 };
