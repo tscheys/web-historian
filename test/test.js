@@ -63,7 +63,7 @@ describe("server", function() {
           .post("/")
           .type('form')
           .send({ url: url })
-          .expect(302, function (err) {
+          .expect(200, function (err) {
             if (!err) {
               var fileContents = fs.readFileSync(archive.paths.list, 'utf8');
               expect(fileContents).to.equal(url + "\n");

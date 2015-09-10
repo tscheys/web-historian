@@ -10,3 +10,5 @@ exports.fetcher = function () {
     archive.downloadUrls(urls);
   });
 };
+
+exports.fetcher();

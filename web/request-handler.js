@@ -31,7 +31,7 @@ var handlePost = function (req, res) {
         // addUrlToList
         archive.addUrlToList(url, function() {
           console.log('url added');
-          fetcher.fetcher();
+          // fetcher.fetcher();
 
         });
         // serve up loading.html
@@ -53,7 +53,7 @@ var handlePost = function (req, res) {
 
           } else {
 
-            fetcher.fetcher();
+            // fetcher.fetcher();
             helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
               console.log('Unarchived page is being fetched.');
             });
