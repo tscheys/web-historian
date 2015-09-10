@@ -21,23 +21,45 @@ var buildData = function(req, callback) {
 };
 
 var handlePost = function (req, res) {
-  buildData(req, function(data) {
+  buildData(req, function handleData(data) {
 
 
     var url = data.split('=')[1];
-    // archive.isUrlArchived(url, function(bool) {
-    //   console.log("archived: " + bool);
-    // });
 
-    archive.addUrlToList(url, function() {
-      console.log('file written');
+    archive.isUrlInList(url, function inList(bool) {
+      if(!bool) {
+        // addUrlToList
+        archive.addUrlToList(url, function() {
+          console.log('url added')
+        });
+        // serve up loading.html
+        helpers.serveAssets(res, "/loading.html", function () {
+          console.log('servin\' it up.');
+        });
+      } else {
+        archive.isUrlArchived(url, function(bool) {
+          console.log("bool for stats.isFile: " + bool);
+        });
+          // if archived
+            //look for file with that name
+            // serve corresponding html/
+          // else
+            // server loading.html
+        res.writeHead(302, 'Moved Temporarily', helpers.headers);
+        res.end('end of post response brahh');
+      }
     });
 
-    fetcher.fetcher();
+    // archive.addUrlToList(url, function() {
+    //   console.log('file written');
+    // });
+
+    // archive.isUrlArchived(url, function(bool) {
+    //   if(bool)
+    // });
+    // fetcher.fetcher();
 
 
-    res.writeHead(302, 'Moved Temporarily', helpers.headers);
-    res.end('end of post response brahh');
 
   });
 };

@@ -68,13 +68,15 @@ exports.isUrlArchived = function(url, cb) {
   exports.isUrlInList(url, function (bool) {
     if(bool) {
       var pathName = exports.paths.archivedSites + '/' + url;
-      console.log('path: ' + pathName);
+
       fs.stat(pathName, function(err, stats) {
-        console.dir('stats object: ' + stats);
+        console.log("stats.isFile is: " + stats.isFile());
         cb(stats.isFile());
       });
     }
-    else {console.log('in the else statement')}
+    else {
+      console.log('url is not archived, so serve up the loading.html page');
+    }
   });
 };
 
