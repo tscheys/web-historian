@@ -89,7 +89,7 @@ exports.downloadUrls = function(urls) {
       if(err) {
         console.log("error: " + err);
       }
-      console.log("res: " + res.code, res.file);
+      console.log("downloading urls");
     });
   });
 

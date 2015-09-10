@@ -31,11 +31,11 @@ var handlePost = function (req, res) {
         // addUrlToList
         archive.addUrlToList(url, function() {
           console.log('url added');
+          fetcher.fetcher();
 
         });
         // serve up loading.html
         helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
-          fetcher.fetcher();
           console.log('servin\' it up.');
 
         });
@@ -53,8 +53,8 @@ var handlePost = function (req, res) {
 
           } else {
 
+            fetcher.fetcher();
             helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
-              fetcher.fetcher();
               console.log('Unarchived page is being fetched.');
             });
 

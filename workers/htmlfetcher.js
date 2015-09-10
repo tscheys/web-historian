@@ -4,15 +4,9 @@ var archive = require('../helpers/archive-helpers');
 
 
 exports.fetcher = function () {
-  // do stuff
   // get the urls 
+  console.log('fetcher called!')
   archive.readListOfUrls(function(urls) {
     archive.downloadUrls(urls);
   });
-
-  // with the callback do stuff on that array 
-    // 
-    // call download urls  = > extra package http-get 
-
-
 };
