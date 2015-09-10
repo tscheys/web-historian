@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var httpRequest = require('http-request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -50,16 +51,12 @@ exports.isUrlInList = function(url, cb) {
 exports.addUrlToList = function(url, cb) {
   exports.isUrlInList(url, function (bool) {
     if(!bool) {
-      exports.readListOfUrls(function(urls) {
-        
-        urls.push(url); 
-        urls = urls.join('\n');
-
-        fs.writeFile(exports.paths.list, urls, function(err) {
-
-        });
-
-      });
+      fs.appendFile(exports.paths.list, url + '\n', function (err) {
+        if (err) {
+          console.log(err + ' did not append to file');
+        }
+        console.log('the file was appended (we are in appendFile now)');
+      })
       cb();
     }
   });
@@ -81,5 +78,18 @@ exports.isUrlArchived = function(url, cb) {
 };
 
 exports.downloadUrls = function(urls) {
-  //should use htmlfetcher.js to scrape the url for html content
+  //iterate over urls, run http-get on every url
+  _.each(urls, function(url) {
+    // var filePath = fs.writeFile
+    var filePath = exports.paths.archivedSites + '/' + url;
+    console.log('filepath: ' + filePath);
+    httpRequest.get(url, filePath, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      console.log(res.code, res.file);
+    });
+  });
+
+
 };

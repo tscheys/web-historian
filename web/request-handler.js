@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var url = require('url');
 var mime = require('mime');
+var fetcher = require('../workers/htmlfetcher')
 // require more modules/folders here!
 
 var buildData = function(req, callback) {
@@ -20,9 +21,9 @@ var buildData = function(req, callback) {
 };
 
 var handlePost = function (req, res) {
-  console.log('handlePOST');
   buildData(req, function(data) {
-  
+
+
     var url = data.split('=')[1];
     // archive.isUrlArchived(url, function(bool) {
     //   console.log("archived: " + bool);
@@ -31,6 +32,8 @@ var handlePost = function (req, res) {
     archive.addUrlToList(url, function() {
       console.log('file written');
     });
+
+    fetcher.fetcher();
 
 
     res.writeHead(302, 'Moved Temporarily', helpers.headers);
@@ -54,15 +57,15 @@ var actions = {
 };
 
 exports.handleRequest = function (req, res) {
-  console.log('handleRequest');
+  console.log(req.type);
   var method = req.method;
 
   if(actions[method]) {
 
     actions[method](req, res);
 
-    res.writeHead(200, helpers.headers);
-    res.end('end of post response brahh');
+    // res.writeHead(200, helpers.headers);
+    // res.end('end of post response brahh');
 
   } else {
     res.writeHead(404, helpers.headers);
