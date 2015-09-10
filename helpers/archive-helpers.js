@@ -27,16 +27,48 @@ exports.initialize = function(pathsObj) {
 
 exports.readListOfUrls = function(cb) {
 
+  fs.readFile(exports.paths.list, function(err, data) {
+    if(!err) {
+      data = data.split('\n');
+      cb(data);
+    }
+  })
 };
 
 exports.isUrlInList = function(url, cb) {
+  exports.readListOfUrls(function (urls) {
+
+    var exists = _.contains(urls, url);
+
+    cb(exists);
+
+  });
 };
 
 exports.addUrlToList = function(url, cb) {
+  exports.isUrlInList(url, function (bool) {
+    if(!bool) {
+      exports.readListOfUrls(function(urls) {
+        
+        urls.push(url); 
+        urls = urls.join('\n');
+
+        fs.writeFile(exports.paths.list, urls, function(err) {
+
+        });
+
+      });
+      cb();
+    }
+  });
 };
 
 exports.isUrlArchived = function(url, cb) {
-
+  exports.isUrlInList(url, function (bool) {
+    if(bool) {
+      //callback to do something with a present url
+    }
+  })
 };
 
 exports.downloadUrls = function(urls) {
