@@ -27,6 +27,8 @@ var handlePost = function (req, res) {
     
     archive.readListOfUrls(archive.isUrlInList, url, req, res);
 
+    // res.writeHead(200, helpers.headers);
+    // res.end('end of post response brahh');
 
   });
 };
@@ -45,6 +47,7 @@ exports.handleRequest = function (req, res) {
 
     res.writeHead(200, helpers.headers);
     res.end('end of post response brahh');
+
   } else {
     res.writeHead(404, helpers.headers);
     res.end('off limits braaah');
