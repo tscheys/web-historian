@@ -1,6 +1,7 @@
 var http = require("http");
 var handler = require("./request-handler");
 var initialize = require("./initialize.js");
+var helpers = require('./http-helpers');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
@@ -19,6 +20,9 @@ var server = http.createServer(function (req, res) {
   var route = url.parse(req.url).pathname;
   if(router[route]) {
     router[route](req, res);
+  } else {
+    res.writeHead(404, helpers.headers);
+    res.end('not found');
   }
 
 

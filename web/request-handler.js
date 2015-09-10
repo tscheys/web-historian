@@ -23,17 +23,12 @@ var handlePost = function (req, res) {
   console.log('handlePOST');
   buildData(req, function(data) {
   
-  var url = data.split('=')[1];
-  
-  archive.isUrlInList(url, function() {
+    var url = data.split('=')[1];
     
-  });
-  // archive.addUrlToList(url, function() {
+    archive.readListOfUrls(archive.isUrlInList, url, req, res);
 
-  // });
 
   });
-
 };
 
 var actions = {
