@@ -30,8 +30,9 @@ exports.readListOfUrls = function(cb) {
 
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     if(!err) {
-      console.log(data);
       data = data.split('\n');
+      data = data.slice(0, data.length - 1);
+      console.log("data length: " + data.length);
       cb(data);
     }
   })
@@ -85,9 +86,9 @@ exports.downloadUrls = function(urls) {
     console.log('filepath: ' + filePath);
     httpRequest.get(url, filePath, function(err, res) {
       if(err) {
-        console.log(err);
+        console.log("error: " + err);
       }
-      console.log(res.code, res.file);
+      console.log("res: " + res.code, res.file);
     });
   });
 
