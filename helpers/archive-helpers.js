@@ -70,7 +70,6 @@ exports.isUrlArchived = function(url, cb) {
       var pathName = exports.paths.archivedSites + '/' + url;
 
       fs.stat(pathName, function(err, stats) {
-        console.log("stats.isFile is: " + stats.isFile());
         cb(stats.isFile());
       });
     }

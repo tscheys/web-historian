@@ -1,3 +1,6 @@
 google.com
 sporza.be
 cnn.com
+npm.org
+apple.com
+anew.com

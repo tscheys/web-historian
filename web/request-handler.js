@@ -30,37 +30,38 @@ var handlePost = function (req, res) {
       if(!bool) {
         // addUrlToList
         archive.addUrlToList(url, function() {
-          console.log('url added')
+          console.log('url added');
+
         });
         // serve up loading.html
-        helpers.serveAssets(res, "/loading.html", function () {
+        helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
+          fetcher.fetcher();
           console.log('servin\' it up.');
+
         });
       } else {
+
         archive.isUrlArchived(url, function(bool) {
+
           console.log("bool for stats.isFile: " + bool);
+
+          if(bool) {
+
+            helpers.serveAssets(res, archive.paths.archivedSites + '/' + url, function() {
+              console.log('serve up archived page');
+            });
+
+          } else {
+
+            helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
+              fetcher.fetcher();
+              console.log('Unarchived page is being fetched.');
+            });
+
+          }
         });
-          // if archived
-            //look for file with that name
-            // serve corresponding html/
-          // else
-            // server loading.html
-        res.writeHead(302, 'Moved Temporarily', helpers.headers);
-        res.end('end of post response brahh');
       }
     });
-
-    // archive.addUrlToList(url, function() {
-    //   console.log('file written');
-    // });
-
-    // archive.isUrlArchived(url, function(bool) {
-    //   if(bool)
-    // });
-    // fetcher.fetcher();
-
-
-
   });
 };
 
