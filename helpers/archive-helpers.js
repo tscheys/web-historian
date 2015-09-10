@@ -11,8 +11,8 @@ var _ = require('underscore');
 
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
-  archivedSites: path.join(__dirname, '../archives/sites'),
-  list: path.join(__dirname, '../archives/sites.txt')
+  archivedSites: path.join(__dirname, '../web/archives/sites'),
+  list: path.join(__dirname, '../web/archives/sites.txt')
 };
 
 // Used for stubbing paths for tests, do not modify
@@ -66,11 +66,18 @@ exports.addUrlToList = function(url, cb) {
 };
 
 exports.isUrlArchived = function(url, cb) {
+  console.log('isUrlArchived was called')
   exports.isUrlInList(url, function (bool) {
     if(bool) {
-      //callback to do something with a present url
+      var pathName = exports.paths.archivedSites + '/' + url;
+      console.log('path: ' + pathName);
+      fs.stat(pathName, function(err, stats) {
+        console.dir('stats object: ' + stats);
+        cb(stats.isFile());
+      });
     }
-  })
+    else {console.log('in the else statement')}
+  });
 };
 
 exports.downloadUrls = function(urls) {

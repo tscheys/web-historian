@@ -24,10 +24,14 @@ var handlePost = function (req, res) {
   buildData(req, function(data) {
   
     var url = data.split('=')[1];
+    // archive.isUrlArchived(url, function(bool) {
+    //   console.log("archived: " + bool);
+    // });
 
-    archive.isUrlInList(url, function(bool) {
-      console.log(bool);
+    archive.addUrlToList(url, function() {
+      console.log('file written');
     });
+
 
     res.writeHead(302, 'Moved Temporarily', helpers.headers);
     res.end('end of post response brahh');
