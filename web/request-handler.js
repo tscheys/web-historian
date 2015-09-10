@@ -25,8 +25,12 @@ var handlePost = function (req, res) {
   
     var url = data.split('=')[1];
 
-    // res.writeHead(200, helpers.headers);
-    // res.end('end of post response brahh');
+    archive.isUrlInList(url, function(bool) {
+      console.log(bool);
+    });
+
+    res.writeHead(302, 'Moved Temporarily', helpers.headers);
+    res.end('end of post response brahh');
 
   });
 };

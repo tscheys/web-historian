@@ -27,8 +27,9 @@ exports.initialize = function(pathsObj) {
 
 exports.readListOfUrls = function(cb) {
 
-  fs.readFile(exports.paths.list, function(err, data) {
+  fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     if(!err) {
+      console.log(data);
       data = data.split('\n');
       cb(data);
     }
@@ -36,6 +37,7 @@ exports.readListOfUrls = function(cb) {
 };
 
 exports.isUrlInList = function(url, cb) {
+
   exports.readListOfUrls(function (urls) {
 
     var exists = _.contains(urls, url);
