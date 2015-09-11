@@ -6,7 +6,10 @@ var path = require('path');
 var url = require('url');
 var mime = require('mime');
 var fetcher = require('../workers/htmlfetcher')
-// require more modules/folders here!
+
+//////////////////////////////////////
+// Handler Helper Functions
+//////////////////////////////////////
 
 var buildData = function(req, callback) {
 
@@ -16,50 +19,70 @@ var buildData = function(req, callback) {
     body += chunk;
   });
   req.on('end', function() {
-     callback(body);
+     var url = body.split('=')[1]
+     callback(url);
+  });
+
+};
+
+var checkArchiveStatus = function(url, res) {
+  var message = '';
+  var filePath;
+  archive.isUrlArchived(url, function(bool) {
+    if(bool) {
+      filePath = archive.paths.archivedSites + '/' + url;
+      message = 'Serve archived page.';
+    } else {
+      filePath = archive.paths.siteAssets + '/loading.html';
+      message = 'Unarchived page is being fetched.';
+    }
+    helpers.serveAssets(res, filePath, function () {
+      console.log(message);
+    });
   });
 };
 
+var addUrl = function(url, res) {
+  archive.addUrlToList(url, function(message) {
+    message = message || 'Url added to sites.txt'
+    console.log(message);
+    // leave this call here if cron job isn't configurated
+    // fetcher.fetcher();
+  });
+
+  helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
+    console.log('Serve loading page.');
+  });
+};
+
+
+
+
+//////////////////////////////////////
+// All Requests Handler
+//////////////////////////////////////
+
+exports.handleRequest = function (req, res) {
+  console.log(req.type);
+  var method = req.method;
+  if(actions[method]) {
+    actions[method](req, res);
+  } else {
+    res.writeHead(404, helpers.headers);
+    res.end('off limits braaah');
+  }
+};
+//////////////////////////////////////
+// POST Handler Logic
+//////////////////////////////////////
+
 var handlePost = function (req, res) {
-  buildData(req, function handleData(data) {
-
-
-    var url = data.split('=')[1];
-
+  buildData(req, function handleData(url) {
     archive.isUrlInList(url, function inList(bool) {
       if(!bool) {
-        // addUrlToList
-        archive.addUrlToList(url, function() {
-          console.log('url added');
-          // fetcher.fetcher();
-
-        });
-        // serve up loading.html
-        helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
-          console.log('servin\' it up.');
-
-        });
+        addUrl(url, res);
       } else {
-
-        archive.isUrlArchived(url, function(bool) {
-
-          console.log("bool for stats.isFile: " + bool);
-
-          if(bool) {
-
-            helpers.serveAssets(res, archive.paths.archivedSites + '/' + url, function() {
-              console.log('serve up archived page');
-            });
-
-          } else {
-
-            // fetcher.fetcher();
-            helpers.serveAssets(res, archive.paths.siteAssets + '/loading.html', function () {
-              console.log('Unarchived page is being fetched.');
-            });
-
-          }
-        });
+        checkArchiveStatus(url, res);
       }
     });
   });
@@ -79,34 +102,10 @@ var actions = {
   'GET': handleGet
 };
 
-exports.handleRequest = function (req, res) {
-  console.log(req.type);
-  var method = req.method;
-
-  if(actions[method]) {
-
-    actions[method](req, res);
-
-    // res.writeHead(200, helpers.headers);
-    // res.end('end of post response brahh');
-
-  } else {
-    res.writeHead(404, helpers.headers);
-    res.end('off limits braaah');
-  }
-};
-
-
-
-
-
 exports.serveFile = function (req, res) {
-  
   var route = url.parse(req.url);
   var filename = route.pathname === '/' ? '/index.html' : route.pathname;
-
   var mimeType = mime.lookup(route.pathname);
-  //this probably changes the object in memory, maybe refactor
   var headers = helpers.headers['Content-Type'] = mimeType;
   res.writeHead(200, headers);
   fs.readFile(__dirname + '/public' + filename, function(err, data) {
@@ -116,6 +115,5 @@ exports.serveFile = function (req, res) {
       res.end(data);
     }
   });
-
 };
 

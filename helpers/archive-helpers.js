@@ -23,29 +23,21 @@ exports.initialize = function(pathsObj) {
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
-
 exports.readListOfUrls = function(cb) {
-
+  //returns array of urls
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     if(!err) {
       data = data.split('\n');
       data = data.slice(0, data.length - 1);
-      console.log("data length: " + data.length);
       cb(data);
     }
-  })
+  });
 };
 
 exports.isUrlInList = function(url, cb) {
-
   exports.readListOfUrls(function (urls) {
-
     var exists = _.contains(urls, url);
-
     cb(exists);
-
   });
 };
 
@@ -53,18 +45,13 @@ exports.addUrlToList = function(url, cb) {
   exports.isUrlInList(url, function (bool) {
     if(!bool) {
       fs.appendFile(exports.paths.list, url + '\n', function (err) {
-        if (err) {
-          console.log(err + ' did not append to file');
-        }
-        console.log('the file was appended (we are in appendFile now)');
-      })
-      cb();
+        cb(err);
+      });
     }
   });
 };
 
 exports.isUrlArchived = function(url, cb) {
-  console.log('isUrlArchived was called')
   exports.isUrlInList(url, function (bool) {
     if(bool) {
       var pathName = exports.paths.archivedSites + '/' + url;
@@ -72,9 +59,6 @@ exports.isUrlArchived = function(url, cb) {
       fs.stat(pathName, function(err, stats) {
         !stats ? cb(false) : cb(stats.isFile());
       });
-    }
-    else {
-      console.log('url is not archived, so serve up the loading.html page');
     }
   });
 };
@@ -87,7 +71,7 @@ exports.downloadUrls = function(urls) {
     console.log('filepath: ' + filePath);
     httpRequest.get(url, filePath, function(err, res) {
       if(err) {
-        console.log("error: " + err);
+        console.log(err);
       }
       console.log("downloading urls");
     });

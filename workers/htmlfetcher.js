@@ -4,7 +4,6 @@ var archive = require('../helpers/archive-helpers');
 
 
 exports.fetcher = function () {
-  // get the urls 
   console.log('fetcher called!')
   archive.readListOfUrls(function(urls) {
     archive.downloadUrls(urls);
