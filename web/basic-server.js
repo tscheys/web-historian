@@ -24,8 +24,6 @@ var server = http.createServer(function (req, res) {
     res.writeHead(404, helpers.headers);
     res.end('not found');
   }
-
-
 });
 
 if (module.parent) {

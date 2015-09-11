@@ -55,7 +55,7 @@ exports.isUrlArchived = function(url, cb) {
   exports.isUrlInList(url, function (bool) {
     if(bool) {
       var pathName = exports.paths.archivedSites + '/' + url;
-
+      // check if file of archived site exists
       fs.stat(pathName, function(err, stats) {
         !stats ? cb(false) : cb(stats.isFile());
       });
@@ -66,16 +66,9 @@ exports.isUrlArchived = function(url, cb) {
 exports.downloadUrls = function(urls) {
   //iterate over urls, run http-get on every url
   _.each(urls, function(url) {
-    // var filePath = fs.writeFile
     var filePath = exports.paths.archivedSites + '/' + url;
-    console.log('filepath: ' + filePath);
     httpRequest.get(url, filePath, function(err, res) {
-      if(err) {
-        console.log(err);
-      }
-      console.log("downloading urls");
+      err ? console.log(err) : console.log("downloading url");
     });
   });
-
-
 };
